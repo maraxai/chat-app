@@ -1,33 +1,42 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 export default class Start extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      color: ''
+      name: 'B.',
+      color: '#123456'
     }
   }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Chat App</Text>
+      <ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
 
+ </ImageBackground>
+        <Text style={styles.title}>Chat App</Text>
         <View style={styles.entries}>
           <TextInput style={styles.input} placeholder='Your Name'/>
           <Text style={styles.pickcolor}>Choose Background Color:</Text>
           <View style={styles.colors}>
-
-            <View style={styles.black}></View>
-            <View style={styles.lila}></View>
-            <View style={styles.blue}></View>
-            <View style={styles.grey}></View>
+            <TouchableOpacity
+              onPress={(color) => this.setState({color: '#090C08'})}
+              style={styles.black} />
+            <TouchableOpacity
+              onPress={(color) => this.setState({color: '#474056'})}
+              style={styles.lila} />
+            <TouchableOpacity
+              onPress={(color) => this.setState({color: '#8A95A5'})}
+              style={styles.blue} />
+            <TouchableOpacity
+              onPress={(color) => this.setState({color: '#B9C6AE'})}
+              style={styles.grey} />
           </View>
           <TouchableHighlight style={styles.button}
             onChangeText={(name) => this.setState({name})}
             value={this.state.name}
-            onPress={() => this.props.navigation.navigate('chat', { name: this.state.name })}>
+            onPress={() => this.props.navigation.navigate('chat', { name: this.state.name }, { color: this.state.color })}>
             <Text style={styles.buttonlabel}>Start Chatting</Text>
           </TouchableHighlight>
         </View>
@@ -47,6 +56,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingBottom: 30
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
   },
   title: {
     color: '#fff',

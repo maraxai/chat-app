@@ -9,10 +9,16 @@ export default class Chat extends React.Component {
   }
   render() {
     const navigation = this.props.navigation.state.params.name;
+    const color = this.props.navigation.state.params.color;
     return (
       <View style={styles.container}>
-    <Text>Hello {this.props.navigation.state.params.name}!!</Text>
-    </View>
+        <View>
+          <Text>Hello {navigation}!</Text>
+        </View>
+        <View>
+          <Text>Your color selection: {color}</Text>
+        </View>
+      </View>
     )
   }
 }
@@ -22,6 +28,6 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue'
+    backgroundColor: 'yellow'
   }
 })
