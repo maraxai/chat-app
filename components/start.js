@@ -22,12 +22,8 @@ changeColor = (value) => {
   this.setState({color: value});
 }
 
-toggleBorder(color) {
-  this.setState({ border: !this.state.border})
-}
-
-
   render() {
+    const color = this.state.color;
     return (
       <View style={styles.container}>
       <ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
@@ -44,27 +40,48 @@ toggleBorder(color) {
             <View style={styles.colors}>
 
               <TouchableOpacity
-                onPress={this.changeColor}
-                value={'#090C08'}
-                style={styles.black} />
+                onPress={() => this.setState({color: '#090C08'})}
+                style={styles.black}
+              >
+                { (this.state.color == '#090C08') ?
+                  (<View style={styles.grey2} ></View>) :
+                  (<View style={styles.grey1} ></View>)
+                }
+              </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => this.setState({color: '#474056'})}
-                style={styles.lila} />
+                style={styles.lila}
+              >
+                { (this.state.color == '#474056') ?
+                  (<View style={styles.grey2} ></View>) :
+                  (<View style={styles.grey1} ></View>)
+                }
+              </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={(color) => this.setState({color: '#8A95A5'})}
-                style={styles.blue} />
-              <TouchableOpacity
-                onPress={this.toggleBorder}
-                { border == false &&
-                <View style={styles.grey2} ></View>
+                style={styles.blue}
+              >
+                { (this.state.color == '#8A95A5') ?
+                  (<View style={styles.grey2} ></View>) :
+                  (<View style={styles.grey1} ></View>)
                 }
-                <View style={styles.grey1} ></View>
               </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={(color) => this.setState({color: '#B9C6AE'})}
+                  style={styles.grey}
+                >
+                  { (this.state.color == '#B9C6AE') ?
+                    (<View style={styles.grey2} ></View>) :
+                    (<View style={styles.grey1} ></View>)
+                  }
+                </TouchableOpacity>
+
             </View>
             <TouchableHighlight style={styles.button}
-              onPress={() => this.props.navigation.navigate('chat', { name: this.state.name }, { color: this.state.color })}>
+              onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
               <Text style={styles.buttonlabel}>Start Chatting</Text>
             </TouchableHighlight>
           </View>
@@ -172,17 +189,41 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 80
   },
+  black2: {
+    backgroundColor: '#fff',
+    height: 40,
+    width: 40,
+    borderRadius: 80,
+    borderWidth:2,
+    borderColor: '#090C08'
+  },
   lila: {
     backgroundColor: '#474056',
     height: 40,
     width: 40,
     borderRadius: 80
   },
+  lila2: {
+    backgroundColor: '#fff',
+    height: 40,
+    width: 40,
+    borderRadius: 80,
+    borderWidth:2,
+    borderColor: '#474056'
+  },
   blue: {
     backgroundColor: '#8A95A5',
     height: 40,
     width: 40,
     borderRadius: 80
+  },
+  blue2: {
+    backgroundColor: '#fff',
+    height: 40,
+    width: 40,
+    borderRadius: 80,
+    borderWidth:2,
+    borderColor: '#8A95A5'
   },
   grey: {
     backgroundColor: '#B9C6AE',
@@ -192,9 +233,9 @@ const styles = StyleSheet.create({
   },
   grey2: {
     backgroundColor: '#fff',
-    height: 45,
-    width: 45,
-    borderRadius: 90,
+    height: 40,
+    width: 40,
+    borderRadius: 80,
     borderWidth:2,
     borderColor: '#B9C6AE'
   }
