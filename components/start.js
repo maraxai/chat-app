@@ -40,7 +40,7 @@ changeColor = (value) => {
               value={this.state.name}
               placeholder='Your Name'
             />
-            <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{flex: 1, justifyContent: 'space-around', alignItems: 'flex-start'}}>
               <Text style={styles.pickcolor}>Choose Background Color:</Text>
               <View style={styles.colors}>
 
@@ -152,14 +152,14 @@ const styles = StyleSheet.create({
     color: '#757083',
     fontSize: 16,
     fontWeight: '300',
-    margin: 20
+    paddingBottom: 10
   },
   // input field, color selection and 'start chatting' button
   entries: {
     width: '88%',
     height: '44%',
     backgroundColor: '#fff',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 25,
     marginBottom: 23
@@ -181,9 +181,9 @@ const styles = StyleSheet.create({
   // button
   button: {
     backgroundColor: '#757083',
-    marginLeft: 20,
     width: '88%',
-    height: 60
+    height: 60,
+    padding: 20
   },
   // button lable 'Start Chatting'
   buttonlabel: {
@@ -196,9 +196,9 @@ const styles = StyleSheet.create({
   colors: {
     flex: 4,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '72%',
-    marginLeft: 12
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    width: '74%'
   },
   full: {
     height: 40,
