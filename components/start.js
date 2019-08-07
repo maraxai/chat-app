@@ -29,23 +29,32 @@ changeColor = (value) => {
       <ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
         <View style={styles.innercontainer}>
           <Text style={styles.title}>Chat App</Text>
+
+
           <View style={styles.entries}>
+
+
             <TextInput
               style={styles.input}
               onChangeText={(name) => this.setState({ name })}
               value={this.state.name}
               placeholder='Your Name'
             />
-            <Text style={styles.pickcolor}>Choose Background Color:</Text>
-            <View style={styles.colors}>
+            <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={styles.pickcolor}>Choose Background Color:</Text>
+              <View style={styles.colors}>
 
               <TouchableOpacity
                 onPress={() => this.setState({color: '#090C08'})}
                 style={styles.black}
               >
                 { (this.state.color == '#090C08') ?
-                  (<View style={styles.grey2} ></View>) :
-                  (<View style={styles.grey1} ></View>)
+                  (
+                    <View style={{position: 'absolute', left: -5, top: -5}}>
+                      <View style={[styles.black2]} ><View style={[styles.black]} ></View></View>
+                      </View>
+                  )
+                  : (<View style={styles.black} ></View>)
                 }
               </TouchableOpacity>
 
@@ -54,36 +63,50 @@ changeColor = (value) => {
                 style={styles.lila}
               >
                 { (this.state.color == '#474056') ?
-                  (<View style={styles.grey2} ></View>) :
-                  (<View style={styles.grey1} ></View>)
+                  (
+                    <View style={{position: 'absolute', left: -5, top: -5}}>
+                      <View style={[styles.lila2]} ><View style={[styles.lila]} ></View></View>
+                      </View>
+                  )
+                  : (<View style={styles.lila} ></View>)
                 }
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={(color) => this.setState({color: '#8A95A5'})}
+                onPress={() => this.setState({color: '#8A95A5'})}
                 style={styles.blue}
               >
                 { (this.state.color == '#8A95A5') ?
-                  (<View style={styles.grey2} ></View>) :
-                  (<View style={styles.grey1} ></View>)
+                  (
+                    <View style={{position: 'absolute', left: -5, top: -5}}>
+                      <View style={[styles.blue2]} ><View style={[styles.blue]} ></View></View>
+                      </View>
+                  )
+                  : (<View style={styles.blue} ></View>)
                 }
               </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={(color) => this.setState({color: '#B9C6AE'})}
-                  style={styles.grey}
-                >
-                  { (this.state.color == '#B9C6AE') ?
-                    (<View style={styles.grey2} ></View>) :
-                    (<View style={styles.grey1} ></View>)
-                  }
-                </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.setState({color: '#B9C6AE'})}
+                style={styles.grey}
+              >
+                { (this.state.color == '#B9C6AE') ?
+                  (
+                    <View style={{position: 'absolute', left: -5, top: -5}}>
+                      <View style={[styles.grey2]} ><View style={[styles.grey]} ></View></View>
+                      </View>
+                  )
+                  : (<View style={styles.grey} ></View>)
+                }
+              </TouchableOpacity>
 
+              </View>
             </View>
-            <TouchableHighlight style={styles.button}
-              onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
-              <Text style={styles.buttonlabel}>Start Chatting</Text>
-            </TouchableHighlight>
+              <TouchableOpacity style={styles.button}
+                onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
+                <Text style={styles.buttonlabel}>Start Chatting</Text>
+              </TouchableOpacity>
+
           </View>
         </View>
         </ImageBackground>
@@ -148,9 +171,6 @@ const styles = StyleSheet.create({
     color: '#757083',
     opacity: 50,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: 'grey',
     margin: 20,
@@ -160,82 +180,97 @@ const styles = StyleSheet.create({
   },
   // button
   button: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#757083',
+    marginLeft: 20,
     width: '88%',
-    height: 80,
-    marginLeft: 18,
-    marginTop: 40
+    height: 60
   },
   // button lable 'Start Chatting'
   buttonlabel: {
+    textAlign: 'center',
     color: '#fff',
     fontWeight: '600',
     fontSize: 16
   },
   // container with colors
   colors: {
-    flex: 1,
+    flex: 4,
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '72%',
     marginLeft: 12
   },
-  black: {
-    backgroundColor: '#090C08',
+  full: {
     height: 40,
     width: 40,
     borderRadius: 80
   },
+  black: {
+    backgroundColor: '#090C08',
+    height: 35,
+    width: 35,
+    borderRadius: 70
+  },
   black2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    height: 40,
-    width: 40,
-    borderRadius: 80,
+    height: 44,
+    width: 44,
+    borderRadius: 22,
     borderWidth:2,
     borderColor: '#090C08'
   },
   lila: {
     backgroundColor: '#474056',
-    height: 40,
-    width: 40,
-    borderRadius: 80
+    height: 35,
+    width: 35,
+    borderRadius: 70
   },
   lila2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    height: 40,
-    width: 40,
-    borderRadius: 80,
+    height: 44,
+    width: 44,
+    borderRadius: 22,
     borderWidth:2,
-    borderColor: '#474056'
+    borderColor: '#474056',
+    opacity: 1
   },
   blue: {
     backgroundColor: '#8A95A5',
-    height: 40,
-    width: 40,
-    borderRadius: 80
+    height: 35,
+    width: 35,
+    borderRadius: 70
   },
   blue2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    height: 40,
-    width: 40,
-    borderRadius: 80,
+    height: 44,
+    width: 44,
+    borderRadius: 22,
     borderWidth:2,
     borderColor: '#8A95A5'
   },
   grey: {
     backgroundColor: '#B9C6AE',
-    height: 40,
-    width: 40,
-    borderRadius: 80,
+    height: 35,
+    width: 35,
+    borderRadius: 70
   },
   grey2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    height: 40,
-    width: 40,
-    borderRadius: 80,
+    height: 44,
+    width: 44,
+    borderRadius: 22,
     borderWidth:2,
     borderColor: '#B9C6AE'
   }
