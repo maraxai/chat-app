@@ -19,7 +19,7 @@ export default class Chat extends React.Component {
       messages: [
         {
           _id: 1,
-          text: 'Hello developeur',
+          text: 'Bonsoir mademe la développeuse!',
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -29,7 +29,7 @@ export default class Chat extends React.Component {
         },
         {
           _id: 2,
-          text: 'This is a system message',
+          text: ' C\'est un message système',
           createdAt: new Date(),
           system: true
         }
@@ -67,8 +67,6 @@ export default class Chat extends React.Component {
     const color = this.props.navigation.state.params.color;
     return (
       <View style={{flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: color,
         marginBottom: 40
       }}
@@ -92,5 +90,5 @@ export default class Chat extends React.Component {
 ///////////
 
 const styles = StyleSheet.create({
-  
+
 })
