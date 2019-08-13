@@ -18,12 +18,12 @@ export default class Chat extends React.Component {
 
     var firebaseConfig = {
       apiKey: "AIzaSyDAopaFuNd6lMgaAqpuN9YWHD0TSJgZPbA",
-    authDomain: "chat-app-21fd9.firebaseapp.com",
-    databaseURL: "https://chat-app-21fd9.firebaseio.com",
-    projectId: "chat-app-21fd9",
-    storageBucket: "chat-app-21fd9.appspot.com",
-    messagingSenderId: "94521123634",
-    appId: "1:94521123634:web:18053b98f6cf6c2e"
+      authDomain: "chat-app-21fd9.firebaseapp.com",
+      databaseURL: "https://chat-app-21fd9.firebaseio.com",
+      projectId: "chat-app-21fd9",
+      storageBucket: "chat-app-21fd9.appspot.com",
+      messagingSenderId: "94521123634",
+      appId: "1:94521123634:web:18053b98f6cf6c2e"
     };
 
     if (!firebase.apps.length) { //avoid re-initializing
@@ -31,9 +31,7 @@ export default class Chat extends React.Component {
     }
 
     //this.referenceShoppinglistUser = null;
-
     this.referenceMessages = firebase.firestore().collection('messages');
-
 
     this.state = {
       messages: [],
@@ -55,9 +53,10 @@ export default class Chat extends React.Component {
         'user.name': data.user.name,
         'user.avatar': data.user.avatar
       });
-    });
-    this.setState({
-      messages
+      this.setState({
+        messages
+      });
+    //console.log(this.state)
     });
   };
 
@@ -130,9 +129,9 @@ export default class Chat extends React.Component {
         uid: user._id,
       })
       // create a reference to the active user's documents
-      this.referenceMessage = firebase.firestore().collection('messages').where('uid', '==', this.state._id)
+      //this.referenceMessage = firebase.firestore().collection('messages').where('uid', '==', this.state._id)
       // listen for collection changes for current user
-      this.unsubscribeMessageAuthor = this.referenceMessage.onSnapshot(this.onCollectionUpdate);
+      //this.unsubscribeMessageAuthor = this.referenceMessage.onSnapshot(this.onCollectionUpdate);
     })
     }
 
