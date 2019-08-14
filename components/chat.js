@@ -30,12 +30,13 @@ export default class Chat extends React.Component {
       firebase.initializeApp(firebaseConfig)
     }
 
-    //this.referenceShoppinglistUser = null;
+    this.referenceUser = null;
     this.referenceMessages = firebase.firestore().collection('messages');
 
     this.state = {
       messages: [],
-      uid: 0
+      uid: 0,
+      loggedInText: 'We are currently struggling to log you in!'
     };
   }
 
@@ -49,9 +50,11 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt,
-        'user._id': data.user._id,
-        'user.name': data.user.name,
-        'user.avatar': data.user.avatar
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar
+        }
       });
       this.setState({
         messages
@@ -62,22 +65,17 @@ export default class Chat extends React.Component {
 
   addMessage() {
     this.referenceMessages.add({
-      _id: 11,
-      text: 'test',
-      createdAt: '1565646504638',
-      user: {
-        _id: 11,
-        name: 'B.',
-        avatar: 'https://placeimg.com/140/140/any'
-      }
-    });
+    messages: this.state.messages
+    })
   }
 
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
-    }))
-  }
+    }), () => {
+      this.addMessage()
+      })
+    }
   //navigation bar configuration
   static navigationOptions = ({ navigation }) => {
     return {
@@ -91,7 +89,7 @@ export default class Chat extends React.Component {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '#000'
+            backgroundColor: '#123458'
           }
         }}
       />
@@ -107,12 +105,18 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
+        <Text style={{flex: 1,
+          textAlign: 'center',
+          fontSize: 20,
+          marginTop: 20
+        }}
+        >{this.state.loggedInText}</Text>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{
-            _id: 1,
+            _id: 1010,
           }}
         />
         { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
@@ -122,21 +126,22 @@ export default class Chat extends React.Component {
 
     componentDidMount() {
       this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        firebase.auth().signInAnonymously();
-      }
+        if (!user) {
+          firebase.auth().signInAnonymously();
+        }
       this.setState({
-        uid: user._id,
+      uid: this.state.uid,
+      loggedInText: 'We made it! Be happy! You\'re in! \n Welcome!'
       })
       // create a reference to the active user's documents
-      //this.referenceMessage = firebase.firestore().collection('messages').where('uid', '==', this.state._id)
+      this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid)
       // listen for collection changes for current user
-      //this.unsubscribeMessageAuthor = this.referenceMessage.onSnapshot(this.onCollectionUpdate);
+      this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
     })
     }
 
     componentWillUnmount() {
-      this.unsubscribeMessageAuthor();
+      this.unsubscribeUser();
       this.authUnsubscribe()
     }
 }
