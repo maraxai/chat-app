@@ -38,10 +38,12 @@ export default class Chat extends React.Component {
       uid: 0,
       loggedInText: 'We are currently struggling to log you in!'
     };
+    console.log('log initial state: 1: messages / 2: uid / 3: loggedInText || 1: ' + this.state.messages + ' / 2: ' + this.state.uid + ' / 3: ' + this.state.loggedInText )
   }
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
+    console.log('in onCollectionUpdate log data', messages)
     // go through each document
     querySnapshot.forEach((doc) => {
       // get the QueryDocumentSnapshot's data
@@ -59,7 +61,7 @@ export default class Chat extends React.Component {
       this.setState({
         messages
       });
-    //console.log(this.state)
+      console.log('in onCollectionUpdate log this.state.messages:', this.state.messages)
     });
   };
 
@@ -67,6 +69,8 @@ export default class Chat extends React.Component {
     this.referenceMessages.add({
     messages: this.state.messages
     })
+    console.log('log messages state in addMessage', this.state.messages)
+    //console.log('log id: _id state in addMessage', _id)
   }
 
   onSend(messages = []) {
@@ -116,7 +120,9 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{
-            _id: 1010,
+            _id: this.state.uid,
+            name: navigation,
+            avatar: ''
           }}
         />
         { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
