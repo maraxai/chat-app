@@ -43,11 +43,12 @@ export default class Chat extends React.Component {
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    console.log('in onCollectionUpdate log data', messages)
+    console.log('in onCollectionUpdate log data :', messages)
     // go through each document
     querySnapshot.forEach((doc) => {
       // get the QueryDocumentSnapshot's data
       var data = doc.data();
+      console.log('in onCollectionUpdate log data before messages.push: ', data);
       messages.push({
         _id: data._id,
         text: data.text,
@@ -61,15 +62,26 @@ export default class Chat extends React.Component {
       this.setState({
         messages
       });
+      //these logs do are not returned
       console.log('in onCollectionUpdate log this.state.messages:', this.state.messages)
+      console.log('in onCollectionUpdate log data after messages.push: ', data._id);
     });
   };
 
   addMessage() {
+    const message = this.state.messages[0];
     this.referenceMessages.add({
-    messages: this.state.messages
+      _id: message._id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: {
+        _id: message.user._id,
+        name: message.user.name,
+        avatar: message.user.avatar
+      }
+      //uid : this.state.uid
     })
-    console.log('log messages state in addMessage', this.state.messages)
+    console.log('in addMessage(), log message :', message, message.user._id)
     //console.log('log id: _id state in addMessage', _id)
   }
 
@@ -122,7 +134,7 @@ export default class Chat extends React.Component {
           user={{
             _id: this.state.uid,
             name: navigation,
-            avatar: ''
+            avatar: ''            //'https://placeimg.com/140/140/any'
           }}
         />
         { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
@@ -136,7 +148,7 @@ export default class Chat extends React.Component {
           firebase.auth().signInAnonymously();
         }
       this.setState({
-      uid: this.state.uid,
+      uid: user.uid,
       loggedInText: 'We made it! Be happy! You\'re in! \n Welcome!'
       })
       // create a reference to the active user's documents
