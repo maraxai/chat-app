@@ -1,7 +1,8 @@
 // component React from react library
 import React from 'react';
 // react native components used in this file
-import { StyleSheet, Text, View, Button, Navigator, Platform, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Navigator, Platform, TouchableOpacity, AsyncStorage, NetInfo } from 'react-native';
+//import getNetInfo from 'netinfo';
 // chat ui
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 // puts space between text line and keyboard
@@ -38,7 +39,8 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       uid: 0,
-      loggedInText: 'We are currently struggling to log you in!'
+      loggedInText: 'We are currently struggling to log you in!',
+      connection_Status : ''
     };
   }
 
@@ -53,7 +55,7 @@ export default class Chat extends React.Component {
       messages.push({
         _id: data._id,
         text: data.text,
-        createdAt: data.createdAt.toString(),
+        createdAt: data.createdAt.toDate(),
         user: data.user
       });
       this.setState({
@@ -68,7 +70,7 @@ export default class Chat extends React.Component {
     this.referenceMessages.add({
       _id: message._id,
       text: message.text,
-      createdAt: message.createdAt.toString(),
+      createdAt: message.createdAt,
       user: message.user
     })
   }
@@ -79,6 +81,7 @@ export default class Chat extends React.Component {
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
       this.addMessage();
+      this.saveMessages();
     });
     }
   //navigation bar configuration, add user name nav bar
@@ -105,6 +108,17 @@ export default class Chat extends React.Component {
     )
   }
 
+  renderInputToolbar(props) {
+    if (this.state.isConnected == false) {
+    } else {
+      return (
+        <InputToolbar
+          {...props}
+        />
+      );
+    }
+  }
+
   // variable 'user' as used in component GiftedChat
   get user() {
     return {
@@ -113,6 +127,50 @@ export default class Chat extends React.Component {
       avatar: ''
     };
   }
+
+
+  async getMessages() {
+    console.log('getMessages() has been invoked')
+    let messages = '';
+    try {
+      messages = await AsyncStorage.getItem('messages') || [];
+      this.setState({
+        messages: JSON.parse(messages)
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  async saveMessages() {
+    console.log('saveMessages() has been invoked');
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async deleteMessages() {
+    console.log('you hit the delete-button ')
+    try {
+      await AsyncStorage.removeItem('messages');
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  _handleConnectivityChange = (isConnected) => {
+
+    if(isConnected == true)
+      {
+        this.setState({connection_Status : "Online"})
+      }
+      else
+      {
+        this.setState({connection_Status : "Offline"})
+      }
+  };
 
   render() {
     // user name as props for nav bar
@@ -126,6 +184,11 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
+        <TouchableOpacity onPress={this.deleteMessages}>
+        <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 20}}> You are { this.state.connection_Status } </Text>
+
+          <Text style={styles.btnDelete}>Delete Messages</Text>
+        </TouchableOpacity>
         <Text style={{
           textAlign: 'center',
           fontSize: 20,
@@ -143,6 +206,30 @@ export default class Chat extends React.Component {
   }
     // lifecycle upon component mount
     componentDidMount() {
+      this.getMessages();
+
+      NetInfo.isConnected.addEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
+     );
+
+      NetInfo.isConnected.fetch().then(isConnected => {
+        if (isConnected) {
+          console.log('on-line');
+        } else {
+          console.log('off-line')
+        }
+      });
+
+      NetInfo.getConnectionInfo().then((connectionInfo) => {
+        console.log(
+          'Initial, type: ' +
+            connectionInfo.type +
+            ', effectiveType: ' +
+            connectionInfo.effectiveType,
+        );
+      });
+
       this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
         if (!user) {
           firebase.auth().signInAnonymously();
@@ -152,6 +239,7 @@ export default class Chat extends React.Component {
         loggedInText: 'We made it! Be happy! You\'re in! \n Welcome!'
         })
         // listen for collection changes for chat room
+        this.referenceMessages = firebase.firestore().collection('messages');
         this.unsubscribeUser = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
       })
     }
@@ -159,7 +247,11 @@ export default class Chat extends React.Component {
     // lifecycle upon component will unmount
     componentWillUnmount() {
       this.unsubscribeUser();
-      this.authUnsubscribe()
+      this.authUnsubscribe();
+      NetInfo.isConnected.removeEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
+      )
     }
 }
 
@@ -168,4 +260,10 @@ export default class Chat extends React.Component {
 ///////////
 
 const styles = StyleSheet.create({
+  btnDelete: {
+    textAlign: 'center',
+    padding: 5,
+    backgroundColor: 'red',
+    color: 'white'
+  }
 })
