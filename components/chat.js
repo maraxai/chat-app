@@ -35,7 +35,7 @@ export default class Chat extends React.Component {
     }
 
     //reference to firstore collection 'messages' where chat messages are stored
-    this.referenceMessages = firebase.firestore().collection('messages');
+    this.referenceMessages = firebase.firestore().collection('messages').where('createdAt', '<', new Date()).orderBy('createdAt');
 
     this.state = {
       messages: [],
@@ -62,6 +62,7 @@ export default class Chat extends React.Component {
       this.setState({
         messages
       });
+      console.log(messages)
     });
   };
 
@@ -186,6 +187,18 @@ export default class Chat extends React.Component {
       }}
       >
       <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 20}}> You are { this.state.connection_Status } </Text>
+        <View style={{backgroundColor: '#999', padding: 10}}>
+          <Text>Test AsyncStorage:</Text>
+          <TouchableOpacity onPress={this.saveData}>
+            <Text style={{backgroundColor: '#aaffaa', width: '80%'}}>click to save msg to asyncStorage</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.displayData}>
+            <Text style={{backgroundColor: '#bbeebb', width: '80%'}}>click to display msg</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.deleteData}>
+            <Text style={{backgroundColor: '#cc00cc', width: '80%'}}>click to delete msg in asynStorage</Text>
+          </TouchableOpacity>
+          </View>
         <TouchableOpacity onPress={this.deleteMessages}>
           <Text style={styles.btnDelete}>Delete Messages</Text>
         </TouchableOpacity>
@@ -205,6 +218,32 @@ export default class Chat extends React.Component {
       </View>
     )
   }
+
+    saveData() {
+      let msg = 'These words come out of AsyncStorage to you!'
+      AsyncStorage.setItem('msg', msg)
+    }
+
+    displayData = async () => {
+      try {
+        let msg = await AsyncStorage.getItem('msg')
+        alert(msg)
+      }
+      catch (error) {
+        alert(error)
+      }
+    }
+
+    deleteData = async () => {
+      try {
+        let msg = await AsyncStorage.removeItem('msg')
+        alert('you deleted the data in AsyncStorage')
+      }
+      catch (error) {
+        alert(error)
+      }
+    }
+
     // lifecycle upon component mount
     componentDidMount() {
       this.getMessages();
