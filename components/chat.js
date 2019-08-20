@@ -1,10 +1,11 @@
 // component React from react library
 import React from 'react';
 // react native components used in this file
-import { StyleSheet, Text, View, Button, Navigator, Platform, TouchableOpacity, AsyncStorage, NetInfo } from 'react-native';
+import { StyleSheet, Text, View, Button, Navigator, Platform,
+        TouchableOpacity, AsyncStorage, NetInfo } from 'react-native';
 //import getNetInfo from 'netinfo';
 // chat ui
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 // puts space between text line and keyboard
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -40,7 +41,7 @@ export default class Chat extends React.Component {
       messages: [],
       uid: 0,
       loggedInText: 'We are currently struggling to log you in!',
-      connection_Status : ''
+      connection_Status : 'Online',
     };
   }
 
@@ -109,7 +110,7 @@ export default class Chat extends React.Component {
   }
 
   renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
+    if (this.state.connection_Status == 'Offline') {
     } else {
       return (
         <InputToolbar
@@ -127,7 +128,6 @@ export default class Chat extends React.Component {
       avatar: ''
     };
   }
-
 
   async getMessages() {
     console.log('getMessages() has been invoked')
@@ -177,6 +177,7 @@ export default class Chat extends React.Component {
     const navigation = this.props.navigation.state.params.name;
     // color as props for background
     const color = this.props.navigation.state.params.color;
+    const connectionStatus = this.state.connection_Status;
     return (
       <View style={{
         flex: 1,
@@ -184,9 +185,8 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
+      <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 20}}> You are { this.state.connection_Status } </Text>
         <TouchableOpacity onPress={this.deleteMessages}>
-        <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 20}}> You are { this.state.connection_Status } </Text>
-
           <Text style={styles.btnDelete}>Delete Messages</Text>
         </TouchableOpacity>
         <Text style={{
@@ -196,6 +196,7 @@ export default class Chat extends React.Component {
         >{this.state.loggedInText}</Text>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={this.user}
@@ -219,6 +220,7 @@ export default class Chat extends React.Component {
         } else {
           console.log('off-line')
         }
+        console.log(isConnected)
       });
 
       NetInfo.getConnectionInfo().then((connectionInfo) => {
@@ -264,6 +266,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
     backgroundColor: 'red',
-    color: 'white'
+    color: 'white',
+    width: '40%'
   }
 })
