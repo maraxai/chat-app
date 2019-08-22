@@ -10,6 +10,14 @@ import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 //button component in message bar for selection of actions (get location/pick image/shoot photo)
 import CustomActions from './custom-actions';
+//
+import MapView from 'react-native-maps';
+//
+import * as ImagePicker from 'expo-image-picker';
+//
+import * as Permissions from 'expo-permissions';
+//
+import * as Location from 'expo-location';
 // import db firestore from firebase
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -43,7 +51,26 @@ export default class Chat extends React.Component {
       uid: 0,
       loggedInText: 'You are not logged in yet.',
       isConnected : false,
+      image: null,
+      location: null
     };
+  }
+
+  pickImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    if (status === 'granted') {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
+      }).catch(error => console.log('There is an error'));
+
+      if (!result.cancelled) {
+        this.setState({
+          image: result
+        })
+      }
+      console.log(result)
+    }
   }
 
   //  once collection gets updated a snapshot is taken
@@ -58,12 +85,12 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user
-        //image: data.image,
-        //location: {
-        //  latitude: data.location.latitude,
-        //  longitude: data.location.longitude,
-        //}
+        user: data.user,
+        image: 'https://facebook.github.io/react-native/img/header_logo.png',
+        location: {
+          latitude: 50,
+          longitude: 3,
+        }
       });
       this.setState({
         messages
@@ -145,8 +172,8 @@ export default class Chat extends React.Component {
           region={{
             latitude: currentMessage.location.latitude,
             longitude: currentMessage.location.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01
+            latitudeDelta: 2,
+            longitudeDelta: 2
           }}
         />
       );
@@ -194,11 +221,10 @@ export default class Chat extends React.Component {
     }
   }
 
-  /*
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
   };
-  */
+
   render() {
     // user name as props for nav bar
     const navigation = this.props.navigation.state.params.name;
@@ -223,6 +249,8 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderCustomView={this.renderCustomView}
+          renderActions={this.renderCustomActions}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={this.user}
@@ -231,7 +259,6 @@ export default class Chat extends React.Component {
       </View>
     )
   }
-  //renderActions={this.renderCustomActions}
 
     // lifecycle upon component mount
     componentDidMount() {
