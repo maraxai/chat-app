@@ -8,7 +8,8 @@ import { StyleSheet, Text, View, Button, Navigator, Platform,
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 // puts space between text line and keyboard
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+//button component in message bar for selection of actions (get location/pick image/shoot photo)
+import CustomActions from './custom-actions';
 // import db firestore from firebase
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -35,13 +36,13 @@ export default class Chat extends React.Component {
     }
 
     //reference to firstore collection 'messages' where chat messages are stored
-    this.referenceMessages = firebase.firestore().collection('messages').where('createdAt', '<', new Date()).orderBy('createdAt');
+    this.referenceMessages = firebase.firestore().collection('messages');
 
     this.state = {
       messages: [],
       uid: 0,
-      loggedInText: 'We are currently struggling to log you in!',
-      connection_Status : 'Online',
+      loggedInText: 'You are not logged in yet.',
+      isConnected : false,
     };
   }
 
@@ -52,12 +53,17 @@ export default class Chat extends React.Component {
     querySnapshot.forEach((doc) => {
       // get the QueryDocumentSnapshot's data
       var data = doc.data();
-      console.log('in onCollectionUpdate log data before messages.push: ', data);
+    //  console.log('in onCollectionUpdate log data before messages.push: ', data);
       messages.push({
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user
+        //image: data.image,
+        //location: {
+        //  latitude: data.location.latitude,
+        //  longitude: data.location.longitude,
+        //}
       });
       this.setState({
         messages
@@ -74,6 +80,11 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user
+      //image: message.image,
+      //location: {
+      //  latitude: message.location.latitude,
+      //  longitude: message.location.longitude,
+      //}
     })
   }
 
@@ -103,7 +114,7 @@ export default class Chat extends React.Component {
             backgroundColor: '#123458'
           },
           left: {
-            backgroundColor: '#006600'
+            backgroundColor: '#6495ED'
           }
         }}
       />
@@ -111,7 +122,7 @@ export default class Chat extends React.Component {
   }
 
   renderInputToolbar(props) {
-    if (this.state.connection_Status == 'Offline') {
+    if (this.state.isConnected == false) {
     } else {
       return (
         <InputToolbar
@@ -119,6 +130,28 @@ export default class Chat extends React.Component {
         />
       );
     }
+  }
+
+  renderCustomView (props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3}}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01
+          }}
+        />
+      );
+    }
+    return null
   }
 
   // variable 'user' as used in component GiftedChat
@@ -161,24 +194,17 @@ export default class Chat extends React.Component {
     }
   }
 
-  _handleConnectivityChange = (isConnected) => {
-
-    if(isConnected == true)
-      {
-        this.setState({connection_Status : "Online"})
-      }
-      else
-      {
-        this.setState({connection_Status : "Offline"})
-      }
+  /*
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
   };
-
+  */
   render() {
     // user name as props for nav bar
     const navigation = this.props.navigation.state.params.name;
     // color as props for background
     const color = this.props.navigation.state.params.color;
-    const connectionStatus = this.state.connection_Status;
+    const connectionStatus = this.state.isConnected;
     return (
       <View style={{
         flex: 1,
@@ -186,21 +212,8 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
-      <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 20}}> You are { this.state.connection_Status } </Text>
-        <View style={{backgroundColor: '#999', padding: 10}}>
-          <Text>Test AsyncStorage:</Text>
-          <TouchableOpacity onPress={this.saveData}>
-            <Text style={{backgroundColor: '#aaffaa', width: '80%'}}>click to save msg to asyncStorage</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.displayData}>
-            <Text style={{backgroundColor: '#bbeebb', width: '80%'}}>click to display msg</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.deleteData}>
-            <Text style={{backgroundColor: '#cc00cc', width: '80%'}}>click to delete msg in asynStorage</Text>
-          </TouchableOpacity>
-          </View>
         <TouchableOpacity onPress={this.deleteMessages}>
-          <Text style={styles.btnDelete}>Delete Messages</Text>
+        <Text style={styles.btnDelete}>Delete Messages</Text>
         </TouchableOpacity>
         <Text style={{
           textAlign: 'center',
@@ -218,81 +231,33 @@ export default class Chat extends React.Component {
       </View>
     )
   }
-
-    saveData() {
-      let msg = 'These words come out of AsyncStorage to you!'
-      AsyncStorage.setItem('msg', msg)
-    }
-
-    displayData = async () => {
-      try {
-        let msg = await AsyncStorage.getItem('msg')
-        alert(msg)
-      }
-      catch (error) {
-        alert(error)
-      }
-    }
-
-    deleteData = async () => {
-      try {
-        let msg = await AsyncStorage.removeItem('msg')
-        alert('you deleted the data in AsyncStorage')
-      }
-      catch (error) {
-        alert(error)
-      }
-    }
+  //renderActions={this.renderCustomActions}
 
     // lifecycle upon component mount
     componentDidMount() {
-      this.getMessages();
-
-      NetInfo.isConnected.addEventListener(
-        'connectionChange',
-        this._handleConnectivityChange
-     );
-
       NetInfo.isConnected.fetch().then(isConnected => {
-        if (isConnected) {
+        if (isConnected == true) {
           console.log('on-line');
-        } else {
-          console.log('off-line')
+          this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+              firebase.auth().signInAnonymously();
+            }
+            this.setState({
+              uid: user.uid,
+              isConnected: true,
+              loggedInText: 'You entered the chat room.'
+            });
+            // listen for collection changes for chat room
+            this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+          });
         }
-        console.log(isConnected)
       });
-
-      NetInfo.getConnectionInfo().then((connectionInfo) => {
-        console.log(
-          'Initial, type: ' +
-            connectionInfo.type +
-            ', effectiveType: ' +
-            connectionInfo.effectiveType,
-        );
-      });
-
-      this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-        if (!user) {
-          firebase.auth().signInAnonymously();
-        }
-        this.setState({
-        uid: user.uid,
-        loggedInText: 'We made it! Be happy! You\'re in! \n Welcome!'
-        })
-        // listen for collection changes for chat room
-        this.referenceMessages = firebase.firestore().collection('messages');
-        this.unsubscribeUser = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
-      })
     }
 
     // lifecycle upon component will unmount
     componentWillUnmount() {
-      this.unsubscribeUser();
+      this.unsubscribe();
       this.authUnsubscribe();
-      NetInfo.isConnected.removeEventListener(
-        'connectionChange',
-        this._handleConnectivityChange
-      )
     }
 }
 
