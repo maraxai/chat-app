@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+const firebase = require('firebase');
+require('firebase/firestore');
 
 export default class CustomActions extends React.Component {
 
@@ -15,12 +17,60 @@ export default class CustomActions extends React.Component {
       }).catch(error => console.log('There is an error'));
 
       if (!result.cancelled) {
+        this.uploadImageFetch(result.uri, 'test-pickImage')
         this.setState({
           image: result
         })
       }
       console.log(result)
     }
+  }
+
+  takePhoto = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status === 'granted') {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: 'Images'
+      }).catch(error => console.log(error));
+
+      if (!result.cancelled) {
+        this.uploadImageFetch(result.uri, 'test-takePhoto')
+        this.setState({
+          image: result
+        });
+      }
+      console.log(result)
+    }
+  }
+
+
+  getLocation = async () => {
+    //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status === 'granted') {
+      let result = await Location.getCurrentPositionAsync({})
+        .catch(error => console.log(error));
+
+      if (result) {
+        this.setState({
+          location: result
+        });
+      }
+    }
+  }
+
+  uploadImageFetch = async(uri, imageName) => {
+    Alert.alert('you just uploaded this picture');
+    const response = await fetch(uri, imageName);
+    const blob = await response.blob();
+    const ref = firebase
+    .storage()
+    .ref()
+    .child("images/");
+    const snapshot = await ref.put(blob);
+
+    return await snapshot.ref.getDownloadURL();
   }
 
   onActionPress = () => {
@@ -40,10 +90,10 @@ export default class CustomActions extends React.Component {
             return this.pickImage();
           case 1:
             console.log('user wants to take a photo');
-            return;
+            return this.takePhoto();
           case 2:
             console.log('user wants to get their location');
-            default:
+            return this.getLocation();
         }
       },
     );

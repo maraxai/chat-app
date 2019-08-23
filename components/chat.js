@@ -2,7 +2,7 @@
 import React from 'react';
 // react native components used in this file
 import { StyleSheet, Text, View, Button, Navigator, Platform,
-        TouchableOpacity, AsyncStorage, NetInfo } from 'react-native';
+        TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
 //import getNetInfo from 'netinfo';
 // chat ui
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
@@ -49,28 +49,13 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       uid: 0,
-      loggedInText: 'You are not logged in yet.',
-      isConnected : false,
+      loggedInText: '...not in yet.',
+      connection_Status: 'Offline',
+      isConnected: false,
       image: null,
-      location: null
+      location: null,
+      uri: null
     };
-  }
-
-  pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    if (status === 'granted') {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images
-      }).catch(error => console.log('There is an error'));
-
-      if (!result.cancelled) {
-        this.setState({
-          image: result
-        })
-      }
-      console.log(result)
-    }
   }
 
   //  once collection gets updated a snapshot is taken
@@ -86,10 +71,10 @@ export default class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        image: 'https://facebook.github.io/react-native/img/header_logo.png',
+        uri: this.state.uri,
         location: {
-          latitude: 50,
-          longitude: 3,
+          latitude: 47.9990,
+          longitude: 7.8421,
         }
       });
       this.setState({
@@ -106,12 +91,12 @@ export default class Chat extends React.Component {
       _id: message._id,
       text: message.text,
       createdAt: message.createdAt,
-      user: message.user
-      //image: message.image,
-      //location: {
-      //  latitude: message.location.latitude,
-      //  longitude: message.location.longitude,
-      //}
+      user: message.user,
+  //    uri: message.uri,
+  //      location: {
+  //      latitude: message.location.latitude,
+  //       longitude: message.location.longitude,
+    //  }
     })
   }
 
@@ -149,7 +134,7 @@ export default class Chat extends React.Component {
   }
 
   renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
+    if (this.state.connection_Status == 'Offline') {
     } else {
       return (
         <InputToolbar
@@ -172,8 +157,8 @@ export default class Chat extends React.Component {
           region={{
             latitude: currentMessage.location.latitude,
             longitude: currentMessage.location.longitude,
-            latitudeDelta: 2,
-            longitudeDelta: 2
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.04
           }}
         />
       );
@@ -225,6 +210,43 @@ export default class Chat extends React.Component {
     return <CustomActions {...props} />;
   };
 
+  _handleConnectivityChange = (isConnected) => {
+    if(isConnected == true) {
+      console.log('online from change');
+      this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          firebase.auth().signInAnonymously();
+        }
+        this.setState({
+          uid: user.uid,
+          isConnected: true,
+          connection_Status : "Online"
+        });
+        this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+      });
+    }
+    else {
+      console.log('offline from change');
+      this.setState({
+        isConnected: false,
+        connection_Status : "Offline"
+      });
+    }
+  };
+
+  uploadImageFetch = async(uri, imageName) => {
+    Alert.alert('you just uploaded a picture')
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const ref = firebase
+      .storage()
+      .ref()
+      .child("images" + imageName);
+    const snapshot = await ref.put(blob);
+
+    return await snapshot.ref.getDownloadURL();
+  }
+
   render() {
     // user name as props for nav bar
     const navigation = this.props.navigation.state.params.name;
@@ -238,14 +260,11 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
-        <TouchableOpacity onPress={this.deleteMessages}>
-        <Text style={styles.btnDelete}>Delete Messages</Text>
-        </TouchableOpacity>
-        <Text style={{
-          textAlign: 'center',
-          fontSize: 20,
-        }}
-        >{this.state.loggedInText}</Text>
+        <Text style={styles.connectionStatus}>{this.state.loggedInText}</Text>
+        <Text style={styles.appStatus}> You are { this.state.connection_Status } </Text>
+        {this.state.uri &&
+          <Image source={{ uri: this.state.uri }} style={styles.image} />
+        }
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
@@ -254,7 +273,7 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={this.user}
-        />
+          />
         { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
       </View>
     )
@@ -262,9 +281,14 @@ export default class Chat extends React.Component {
 
     // lifecycle upon component mount
     componentDidMount() {
+      NetInfo.isConnected.addEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
+      );
+
       NetInfo.isConnected.fetch().then(isConnected => {
         if (isConnected == true) {
-          console.log('on-line');
+          console.log('online from fetch');
           this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (!user) {
               firebase.auth().signInAnonymously();
@@ -272,10 +296,18 @@ export default class Chat extends React.Component {
             this.setState({
               uid: user.uid,
               isConnected: true,
+              connection_Status: 'Online',
               loggedInText: 'You entered the chat room.'
             });
             // listen for collection changes for chat room
             this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+          });
+        }
+        else {
+          console.log('offline from change');
+          this.setState({
+            isConnected: false,
+            connection_Status : "Offline"
           });
         }
       });
@@ -285,6 +317,10 @@ export default class Chat extends React.Component {
     componentWillUnmount() {
       this.unsubscribe();
       this.authUnsubscribe();
+      NetInfo.isConnected.removeEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
+      )
     }
 }
 
@@ -299,5 +335,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     color: 'white',
     width: '40%'
+  },
+  appStatus: {
+    textAlign: 'center',
+    fontSize: 16
+  },
+  connectionStatus: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 12
   }
 })
