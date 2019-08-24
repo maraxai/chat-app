@@ -71,7 +71,7 @@ export default class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        image: data.image,
+        image: this.state.image,
         location: {
           latitude: 50.1651943,
           longitude: 8.6718349,
@@ -93,7 +93,7 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-  //    image: message.image
+      image: this.state.image
   //      location: {
   //      latitude: message.location.latitude,
   //       longitude: message.location.longitude,

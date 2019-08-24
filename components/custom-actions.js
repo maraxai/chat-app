@@ -17,13 +17,15 @@ export default class CustomActions extends React.Component {
       }).catch(error => console.log('There is an error'));
 
       if (!result.cancelled) {
-  
-        this.uploadImageFetch(result.uri, 'pickImage')
+        //this.props.onSend({ image: result.uri })
+        this.uploadImageFetch(result.uri, 'pickImage-2')
         this.setState({
-          image: result
+          image: result.uri
         })
       }
+      console.log('result in pickImage in custom-actions: ')
       console.log(result)
+            console.log('result.uri in pickImage in custom-actions: ' + result.uri)
     }
   }
 
