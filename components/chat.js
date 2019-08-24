@@ -71,15 +71,16 @@ export default class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        uri: this.state.uri,
+        image: data.image,
         location: {
-          latitude: 47.9990,
-          longitude: 7.8421,
+          latitude: 50.1651943,
+          longitude: 8.6718349,
         }
       });
       this.setState({
         messages
       });
+      console.log('check for image and location:')
       console.log(messages)
     });
   };
@@ -92,7 +93,7 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-  //    uri: message.uri,
+  //    image: message.image
   //      location: {
   //      latitude: message.location.latitude,
   //       longitude: message.location.longitude,
@@ -230,22 +231,28 @@ export default class Chat extends React.Component {
       this.setState({
         isConnected: false,
         connection_Status : "Offline"
+        messages: []
       });
+      this.getMessages();
     }
   };
 
-  uploadImageFetch = async(uri, imageName) => {
-    Alert.alert('you just uploaded a picture')
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const ref = firebase
-      .storage()
-      .ref()
-      .child("images" + imageName);
-    const snapshot = await ref.put(blob);
+  getLocation = async () => {
+    //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-    return await snapshot.ref.getDownloadURL();
+    if (status === 'granted') {
+      let result = await Location.getCurrentPositionAsync({})
+        .catch(error => console.log(error));
+
+      if (result) {
+        this.setState({
+          location: result
+        });
+      }
+    }
   }
+
 
   render() {
     // user name as props for nav bar
@@ -260,6 +267,7 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
+        <Text>This is your current location: {JSON.stringify(this.state.location)}</Text>
         <Text style={styles.connectionStatus}>{this.state.loggedInText}</Text>
         <Text style={styles.appStatus}> You are { this.state.connection_Status } </Text>
         {this.state.uri &&
@@ -281,6 +289,8 @@ export default class Chat extends React.Component {
 
     // lifecycle upon component mount
     componentDidMount() {
+      this.getLocation();
+
       NetInfo.isConnected.addEventListener(
         'connectionChange',
         this._handleConnectivityChange

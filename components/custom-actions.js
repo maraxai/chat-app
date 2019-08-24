@@ -17,7 +17,7 @@ export default class CustomActions extends React.Component {
       }).catch(error => console.log('There is an error'));
 
       if (!result.cancelled) {
-        this.uploadImageFetch(result.uri, 'test-pickImage')
+        this.uploadImageFetch(result.uri, 'pickImage')
         this.setState({
           image: result
         })
@@ -34,9 +34,9 @@ export default class CustomActions extends React.Component {
       }).catch(error => console.log(error));
 
       if (!result.cancelled) {
-        this.uploadImageFetch(result.uri, 'test-takePhoto')
+        this.uploadImageFetch(result.uri, 'takePhoto')
         this.setState({
-          image: result
+          image: result.uri
         });
       }
       console.log(result)
@@ -61,13 +61,13 @@ export default class CustomActions extends React.Component {
   }
 
   uploadImageFetch = async(uri, imageName) => {
-    Alert.alert('you just uploaded this picture');
+    Alert.alert('Would you like to upload this picture?');
     const response = await fetch(uri, imageName);
     const blob = await response.blob();
     const ref = firebase
     .storage()
     .ref()
-    .child("images/");
+    .child("images/" + imageName);
     const snapshot = await ref.put(blob);
 
     return await snapshot.ref.getDownloadURL();
