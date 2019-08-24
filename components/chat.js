@@ -230,7 +230,7 @@ export default class Chat extends React.Component {
       console.log('offline from change');
       this.setState({
         isConnected: false,
-        connection_Status : "Offline"
+        connection_Status : "Offline",
         messages: []
       });
       this.getMessages();
