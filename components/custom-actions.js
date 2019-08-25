@@ -17,10 +17,11 @@ export default class CustomActions extends React.Component {
       }).catch(error => console.log('There is an error'));
 
       if (!result.cancelled) {
-        //this.props.onSend({ image: result.uri })
-        this.uploadImageFetch(result.uri, 'pickImage-2')
+        const imageUrl = await this.uploadImageFetch(result.uri);
+        this.props.onSend({ image: imageUrl })
+        this.uploadImageFetch(result.uri, 'pickImage-Sunday7')
         this.setState({
-          image: result.uri
+          image: result.image
         })
       }
       console.log('result in pickImage in custom-actions: ')
@@ -33,13 +34,15 @@ export default class CustomActions extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status === 'granted') {
       let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: 'Images'
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
       }).catch(error => console.log(error));
 
       if (!result.cancelled) {
-        this.uploadImageFetch(result.uri, 'takePhoto')
+        const imageUrl = await this.uploadImageFetch(result.uri);
+        this.props.onSend({ image: imageUrl })
+        this.uploadImageFetch(result.uri, 'takePhoto-Sunday7')
         this.setState({
-          image: result.uri
+          image: result.image
         });
       }
       console.log(result)
@@ -48,10 +51,16 @@ export default class CustomActions extends React.Component {
 
 
   getLocation = async () => {
-    //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
+    console.log('getLocation has been invoked')
+    alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
     if (status === 'granted') {
+      this.props.onSend({ location: {
+        longitude: longitude,
+        latitude: latitude
+        }
+      })
       let result = await Location.getCurrentPositionAsync({})
         .catch(error => console.log(error));
 
@@ -60,6 +69,7 @@ export default class CustomActions extends React.Component {
           location: result
         });
       }
+      console.log(location)
     }
   }
 
@@ -68,12 +78,13 @@ export default class CustomActions extends React.Component {
     const response = await fetch(uri, imageName);
     const blob = await response.blob();
     const ref = firebase
-    .storage()
-    .ref()
-    .child("images/" + imageName);
+      .storage()
+      .ref()
+      .child("images/" + imageName);
     const snapshot = await ref.put(blob);
 
-    return await snapshot.ref.getDownloadURL();
+    const imageUrl = await snapshot.ref.getDownloadURL();
+    return imageUrl;
   }
 
   onActionPress = () => {

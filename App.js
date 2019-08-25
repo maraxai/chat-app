@@ -13,6 +13,7 @@ const navigator = createStackNavigator({
   chat: { screen: Chat }
 });
 
+
 // navigationContainer is the main container that holds the state of the different components/screens
 const navigatorContainer = createAppContainer(navigator);
 

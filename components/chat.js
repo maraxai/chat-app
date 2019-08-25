@@ -71,7 +71,7 @@ export default class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        image: this.state.image,
+        image: data.image,
         location: {
           latitude: 50.1651943,
           longitude: 8.6718349,
@@ -93,7 +93,7 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      image: this.state.image
+    //  image: message.uri
   //      location: {
   //      latitude: message.location.latitude,
   //       longitude: message.location.longitude,
@@ -237,23 +237,6 @@ export default class Chat extends React.Component {
     }
   };
 
-  getLocation = async () => {
-    //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-    if (status === 'granted') {
-      let result = await Location.getCurrentPositionAsync({})
-        .catch(error => console.log(error));
-
-      if (result) {
-        this.setState({
-          location: result
-        });
-      }
-    }
-  }
-
-
   render() {
     // user name as props for nav bar
     const navigation = this.props.navigation.state.params.name;
@@ -289,7 +272,6 @@ export default class Chat extends React.Component {
 
     // lifecycle upon component mount
     componentDidMount() {
-      this.getLocation();
 
       NetInfo.isConnected.addEventListener(
         'connectionChange',

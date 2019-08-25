@@ -30,9 +30,7 @@ changeColor = (value) => {
         <View style={styles.innercontainer}>
           <Text style={styles.title}>Chat App</Text>
 
-
           <View style={styles.entries}>
-
 
             <TextInput
               style={styles.input}
@@ -102,11 +100,10 @@ changeColor = (value) => {
 
               </View>
             </View>
-              <TouchableOpacity style={styles.button}
-                onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
-                <Text style={styles.buttonlabel}>Start Chatting</Text>
-              </TouchableOpacity>
-
+            <TouchableOpacity style={styles.button}
+              onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
+              <Text style={styles.buttonlabel}>Start Chatting</Text>
+            </TouchableOpacity>
           </View>
         </View>
         </ImageBackground>
