@@ -65,7 +65,7 @@ export default class Chat extends React.Component {
     querySnapshot.forEach((doc) => {
       // get the QueryDocumentSnapshot's data
       var data = doc.data();
-    //  console.log('in onCollectionUpdate log data before messages.push: ', data);
+    //  these entries determine what will be displayed on the device
       messages.push({
         _id: data._id,
         text: data.text,
@@ -73,8 +73,8 @@ export default class Chat extends React.Component {
         user: data.user,
         image: data.image,
         location: {
-          latitude: 50.1651943,
-          longitude: 8.6718349,
+          latitude: data.latitude,
+          longitude: data.longitude,
         }
       });
       this.setState({
@@ -85,7 +85,7 @@ export default class Chat extends React.Component {
     });
   };
 
-  // add the message to firestore, function 'fired' by onSend
+  // these entries will be send to firestore, function 'fired' by onSend
   addMessage() {
     const message = this.state.messages[0];
     this.referenceMessages.add({
@@ -93,11 +93,11 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-    //  image: message.uri
-  //      location: {
-  //      latitude: message.location.latitude,
-  //       longitude: message.location.longitude,
-    //  }
+      image: '',
+      location: {
+        latitude: null,
+        longitude: null
+      }
     })
   }
 
@@ -250,7 +250,7 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
-        <Text>This is your current location: {JSON.stringify(this.state.location)}</Text>
+        <Text>This is your current location: {this.state.location}</Text>
         <Text style={styles.connectionStatus}>{this.state.loggedInText}</Text>
         <Text style={styles.appStatus}> You are { this.state.connection_Status } </Text>
         {this.state.uri &&

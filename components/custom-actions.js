@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -19,14 +20,10 @@ export default class CustomActions extends React.Component {
       if (!result.cancelled) {
         const imageUrl = await this.uploadImageFetch(result.uri);
         this.props.onSend({ image: imageUrl })
-        this.uploadImageFetch(result.uri, 'pickImage-Sunday7')
-        this.setState({
-          image: result.image
-        })
       }
       console.log('result in pickImage in custom-actions: ')
       console.log(result)
-            console.log('result.uri in pickImage in custom-actions: ' + result.uri)
+      console.log('result.uri in pickImage in custom-actions: ' + result.uri)
     }
   }
 
@@ -40,48 +37,53 @@ export default class CustomActions extends React.Component {
       if (!result.cancelled) {
         const imageUrl = await this.uploadImageFetch(result.uri);
         this.props.onSend({ image: imageUrl })
-        this.uploadImageFetch(result.uri, 'takePhoto-Sunday7')
-        this.setState({
-          image: result.image
-        });
       }
-      console.log(result)
+      console.log(imageUrl)
     }
   }
 
 
   getLocation = async () => {
-    console.log('getLocation has been invoked')
+    console.log('getLocation() has been invoked')
     alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
+    console.log('status is: ' + status)
     if (status === 'granted') {
-      this.props.onSend({ location: {
-        longitude: longitude,
-        latitude: latitude
-        }
-      })
       let result = await Location.getCurrentPositionAsync({})
-        .catch(error => console.log(error));
+      .catch(error => console.log(error));
+      const longitude = JSON.stringify(result.coords.longitude);
+      const altitude = JSON.stringify(result.coords.latitude);
+      console.log('longitude: ' + longitude + ' / '+ 'altitude' + altitude)
 
       if (result) {
         this.setState({
-          location: result
+          location : result
         });
       }
       console.log(location)
     }
+    this.props.onSend({ location: {
+      longitude: this.longitude,
+      latitude: this.latitude
+    }
+  })
   }
 
-  uploadImageFetch = async(uri, imageName) => {
+  uploadImageFetch = async(uri) => {
     Alert.alert('Would you like to upload this picture?');
-    const response = await fetch(uri, imageName);
+    const response = await fetch(uri);
     const blob = await response.blob();
+
+    const imageNameBefore = uri.split("/");
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
     const ref = firebase
       .storage()
       .ref()
       .child("images/" + imageName);
+
     const snapshot = await ref.put(blob);
+
 
     const imageUrl = await snapshot.ref.getDownloadURL();
     return imageUrl;
