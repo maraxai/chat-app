@@ -93,10 +93,10 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      image: '',
+      image: message.image || '',
       location: {
-        latitude: null,
-        longitude: null
+        latitude: message.latitude || null,
+        longitude: message.longitude || null
       }
     })
   }

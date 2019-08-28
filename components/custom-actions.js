@@ -45,7 +45,7 @@ export default class CustomActions extends React.Component {
 
   getLocation = async () => {
     console.log('getLocation() has been invoked')
-    alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
+    //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     console.log('status is: ' + status)
     if (status === 'granted') {
@@ -53,11 +53,11 @@ export default class CustomActions extends React.Component {
       .catch(error => console.log(error));
       const longitude = JSON.stringify(result.coords.longitude);
       const altitude = JSON.stringify(result.coords.latitude);
-      console.log('longitude: ' + longitude + ' / '+ 'altitude' + altitude)
+      console.log('longitude: ' + longitude + ' / '+ 'altitude: ' + altitude)
 
       if (result) {
         this.setState({
-          location : result
+          location: result
         });
       }
       console.log(location)
@@ -69,24 +69,37 @@ export default class CustomActions extends React.Component {
   })
   }
 
-  uploadImageFetch = async(uri) => {
-    Alert.alert('Would you like to upload this picture?');
-    const response = await fetch(uri);
-    const blob = await response.blob();
+  uploadImageFetch = async (uri) => {
+    try {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
 
-    const imageNameBefore = uri.split("/");
-    const imageName = imageNameBefore[imageNameBefore.length - 1];
+      const imageNameBefore = uri.split("/");
+      const imageName = imageNameBefore[imageNameBefore.length - 1];
 
-    const ref = firebase
-      .storage()
-      .ref()
-      .child("images/" + imageName);
+      const ref = firebase
+        .storage()
+        .ref()
+        .child("images/" + imageName);
 
-    const snapshot = await ref.put(blob);
-
-
-    const imageUrl = await snapshot.ref.getDownloadURL();
-    return imageUrl;
+      const snapshot = await ref.put(blob);
+      blob.close();
+      const imageUrl = await snapshot.ref.getDownloadURL();
+      return imageUrl;
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   onActionPress = () => {
