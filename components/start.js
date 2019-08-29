@@ -1,9 +1,10 @@
-// import component React from react library
+/** The following code applies ES6 syntax and functionality */
+/** import component React from react library */
 import React from 'react';
-// import react components that style the UI
+/** import react components that style the UI */
 import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
 
-// react class component with constructor function containing the state of name and color
+/** react class component with constructor function containing the state of name and color */
 export default class Start extends React.Component {
   constructor(props) {
     super(props);
@@ -14,14 +15,16 @@ export default class Start extends React.Component {
     }
   }
 
-/* react native styling components and their html equivalences
-View - div
-TouchableOpacity (and TouchableHighlight) - button
+/** react native styling components and their html equivalences
+* View - div
+* TouchableOpacity (and TouchableHighlight) - button
 */
-changeColor = (value) => {
-  this.setState({color: value});
-}
+  /** color change on start screen */
+  changeColor = (value) => {
+    this.setState({color: value});
+  }
 
+  /**  react render function includes ImageBackground, TextInput, buttons TouchableHighlight and TouchableOpacity*/
   render() {
     const color = this.state.color;
     return (
@@ -29,9 +32,7 @@ changeColor = (value) => {
       <ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
         <View style={styles.innercontainer}>
           <Text style={styles.title}>Chat App</Text>
-
           <View style={styles.entries}>
-
             <TextInput
               style={styles.input}
               onChangeText={(name) => this.setState({ name })}
@@ -55,7 +56,6 @@ changeColor = (value) => {
                   : (<View style={styles.black} ></View>)
                 }
               </TouchableOpacity>
-
               <TouchableOpacity
                 onPress={() => this.setState({color: '#474056'})}
                 style={styles.lila}
@@ -69,7 +69,6 @@ changeColor = (value) => {
                   : (<View style={styles.lila} ></View>)
                 }
               </TouchableOpacity>
-
               <TouchableOpacity
                 onPress={() => this.setState({color: '#8A95A5'})}
                 style={styles.blue}
@@ -83,7 +82,6 @@ changeColor = (value) => {
                   : (<View style={styles.blue} ></View>)
                 }
               </TouchableOpacity>
-
               <TouchableOpacity
                 onPress={() => this.setState({color: '#B9C6AE'})}
                 style={styles.grey}
@@ -97,7 +95,6 @@ changeColor = (value) => {
                   : (<View style={styles.grey} ></View>)
                 }
               </TouchableOpacity>
-
               </View>
             </View>
             <TouchableOpacity style={styles.button}
@@ -112,24 +109,22 @@ changeColor = (value) => {
   }
 }
 
-////////////////
-// UI Styling section (equivalences to CSS)
-///////////////
+/** UI Styling section (equivalences to CSS) */
 
 const styles = StyleSheet.create({
-  // main container that holds all elements
+  /** main container that holds all elements */
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  // background image
+  /** background image */
   backgroundImage: {
     flex: 1,
     width: '100%',
     height: '100%'
   },
-  // holds title and entries (input field, color selection and 'start chatting' button)
+  /** holds title and entries (input field, color selection and 'start chatting' button) */
   innercontainer: {
     flex: 1,
     flexDirection: 'column',
@@ -137,21 +132,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
-  // app title
+  /** app title */
   title: {
     color: '#fff',
     fontSize: 45,
     fontWeight: '600',
     marginTop: 74
   },
-  // text: 'Choose Background Color:'
+  /** text: 'Choose Background Color:' */
   pickcolor: {
     color: '#757083',
     fontSize: 16,
     fontWeight: '300',
     paddingBottom: 10
   },
-  // input field, color selection and 'start chatting' button
+  /** input field, color selection and 'start chatting' button */
   entries: {
     width: '88%',
     height: '44%',
@@ -161,7 +156,7 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     marginBottom: 23
   },
-  // input field
+  /** input field */
   input: {
     fontSize: 16,
     fontWeight: '300',
@@ -175,21 +170,21 @@ const styles = StyleSheet.create({
     height: 60,
     padding: 20
   },
-  // button
+  /** button  */
   button: {
     backgroundColor: '#757083',
     width: '88%',
     height: 60,
     padding: 20
   },
-  // button lable 'Start Chatting'
+  /** button lable 'Start Chatting'  */
   buttonlabel: {
     textAlign: 'center',
     color: '#fff',
     fontWeight: '600',
     fontSize: 16
   },
-  // container with colors
+  /** container with colors  */
   colors: {
     flex: 4,
     flexDirection: 'row',

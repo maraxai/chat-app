@@ -1,34 +1,38 @@
-// component React from react library
+/**The following code uses ES6 syntax and functionality*/
+
+/** component React from react library*/
 import React from 'react';
-// react native components used in this file
+/** react native components used in this file*/
 import { StyleSheet, Text, View, Button, Navigator, Platform,
         TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
 //import getNetInfo from 'netinfo';
-// chat ui
+/** chat ui*/
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-// puts space between text line and keyboard
+/** puts space between text line and keyboard*/
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-//button component in message bar for selection of actions (get location/pick image/shoot photo)
+/**button component in message bar for selection of actions (get location/pick image/shoot photo)*/
 import CustomActions from './custom-actions';
-//
+/** */
 import MapView from 'react-native-maps';
-//
+/** */
 import * as ImagePicker from 'expo-image-picker';
-//
+/** */
 import * as Permissions from 'expo-permissions';
-//
+/** */
 import * as Location from 'expo-location';
-// import db firestore from firebase
-const firebase = require('firebase');
-require('firebase/firestore');
+/** import db firestore from firebase*/
+/**const firebase = require('firebase');*/
+/**require('firebase/firestore');*/
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
-// class component
+/** class component */
 export default class Chat extends React.Component {
   constructor() {
     super();
 
-    // firestore credentials for chat-app db
-    var firebaseConfig = {
+    /** firestore credentials for chat-app db */
+    let firebaseConfig = {
       apiKey: "AIzaSyDAopaFuNd6lMgaAqpuN9YWHD0TSJgZPbA",
       authDomain: "chat-app-21fd9.firebaseapp.com",
       databaseURL: "https://chat-app-21fd9.firebaseio.com",
@@ -38,12 +42,12 @@ export default class Chat extends React.Component {
       appId: "1:94521123634:web:18053b98f6cf6c2e"
     };
 
-    // app initialization
-    if (!firebase.apps.length) { //avoid re-initializing
+    /** app initialization, line initializeApp prevents re-initialisation */
+    if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
     }
 
-    //reference to firstore collection 'messages' where chat messages are stored
+    /**reference to firstore collection 'messages' where chat messages are stored*/
     this.referenceMessages = firebase.firestore().collection('messages');
 
     this.state = {
@@ -58,35 +62,36 @@ export default class Chat extends React.Component {
     };
   }
 
-  //  once collection gets updated a snapshot is taken
+  /**  once collection gets updated a snapshot is taken*/
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    // go through each document
-    querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
-      var data = doc.data();
-    //  these entries determine what will be displayed on the device
-      messages.push({
-        _id: data._id,
-        text: data.text || '',
-        createdAt: data.createdAt.toDate(),
-        user: data.user,
-        image: data.image || '',
-        location: data.location || null
+    try {
+      /** go through each document */
+      querySnapshot.forEach((doc) => {
+        /* get the QueryDocumentSnapshot's data */
+        let data = doc.data();
+        /** these entries determine what will be displayed on the device */
+        messages.push({
+          _id: data._id,
+          text: data.text || '',
+          createdAt: data.createdAt.toDate(),
+          user: data.user,
+          image: data.image || '',
+          location: data.location || null
+        });
+        this.setState({
+          messages
+        });
       });
-      this.setState({
-        messages
-      });
-      console.log('check for image and location:')
-      console.log(messages)
-    });
+    }
+    catch (error) {
+      console.log(error.message)
+    }
   };
 
-  // these entries will be send to firestore, function 'fired' by onSend
+  /** these entries will be send to firestore, function 'fired' by onSend */
   addMessage() {
     const message = this.state.messages[0];
-    //console.log('this consoles this.state.messages[0] in the addMessage(): ')
-  //  console.log(this.state.messages);
     try {
         this.referenceMessages.add({
           _id: message._id,
@@ -102,23 +107,33 @@ export default class Chat extends React.Component {
     }
   }
 
-  // will add new message to messages array
+  /** will add new message to messages array */
   onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }), () => {
-      this.saveMessages();
-      this.addMessage();
-    });
+    try {
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }), () => {
+        this.saveMessages();
+        this.addMessage();
+      });
+    }
+    catch (error) {
+      console.log(error)
+    }
   }
-  //navigation bar configuration, add user name nav bar
+  /**navigation bar configuration, add user name nav bar */
   static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.state.params.name
-    };
+    try {
+      return {
+        title: navigation.state.params.name
+      };
+    }
+    catch (error) {
+      console.log(error.message)
+    }
   }
 
-  // message boxes, placed left and right
+  /** message boxes, placed left and right */
   renderBubble(props) {
     return (
       <Bubble
@@ -135,6 +150,7 @@ export default class Chat extends React.Component {
     )
   }
 
+  /** renders text input bar with integrated custom action button */
   renderInputToolbar(props) {
     if (this.state.connection_Status == 'Offline') {
     } else {
@@ -146,6 +162,7 @@ export default class Chat extends React.Component {
     }
   }
 
+  /** displays the location map */
   renderCustomView (props) {
     const { currentMessage } = props;
     if (currentMessage.location) {
@@ -168,7 +185,7 @@ export default class Chat extends React.Component {
     return null
   }
 
-  // variable 'user' as used in component GiftedChat
+  /** variable 'user' as used in component GiftedChat */
   get user() {
     return {
       _id: this.state.uid,
@@ -177,6 +194,7 @@ export default class Chat extends React.Component {
     };
   }
 
+    /** get data from AsyncStorage */
   async getMessages() {
     console.log('getMessages() has been invoked')
     let messages = '';
@@ -190,6 +208,7 @@ export default class Chat extends React.Component {
     }
   };
 
+  /** puyt data into AsyncStorage */
   async saveMessages() {
     console.log('saveMessages() has been invoked');
     try {
@@ -199,6 +218,7 @@ export default class Chat extends React.Component {
     }
   }
 
+  /** delete data from AsyncStorage */
   async deleteMessages() {
     console.log('you hit the delete-button ')
     try {
@@ -208,10 +228,12 @@ export default class Chat extends React.Component {
     }
   }
 
+  /** renders the custom action button in the text input field */
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
   };
 
+  /** defines what happens upon change of connectivity */
   _handleConnectivityChange = (isConnected) => {
     if(isConnected == true) {
       console.log('online from change');
@@ -238,10 +260,12 @@ export default class Chat extends React.Component {
     }
   };
 
+
+  /** react component render function includes GiftedChat */
   render() {
-    // user name as props for nav bar
+    /** user name as props for nav bar */
     const navigation = this.props.navigation.state.params.name;
-    // color as props for background
+    /** color as props for background */
     const color = this.props.navigation.state.params.color;
     const connectionStatus = this.state.isConnected;
     return (
@@ -251,7 +275,6 @@ export default class Chat extends React.Component {
         marginBottom: 40
       }}
       >
-        <Text>This is your current location: {this.state.location}</Text>
         <Text style={styles.connectionStatus}>{this.state.loggedInText}</Text>
         <Text style={styles.appStatus}> You are { this.state.connection_Status } </Text>
         {this.state.uri &&
@@ -271,7 +294,7 @@ export default class Chat extends React.Component {
     )
   }
 
-    // lifecycle upon component mount
+    /** lifecycle upon component mount */
     componentDidMount() {
 
       NetInfo.isConnected.addEventListener(
@@ -279,6 +302,7 @@ export default class Chat extends React.Component {
         this._handleConnectivityChange
       );
 
+      /**    */
       NetInfo.isConnected.fetch().then(isConnected => {
         if (isConnected == true) {
           console.log('online from fetch');
@@ -306,7 +330,7 @@ export default class Chat extends React.Component {
       });
     }
 
-    // lifecycle upon component will unmount
+    /** lifecycle upon component will unmount */
     componentWillUnmount() {
       this.unsubscribe();
       this.authUnsubscribe();
@@ -317,18 +341,9 @@ export default class Chat extends React.Component {
     }
 }
 
-////////////
-// styling section
-///////////
+/** styling section */
 
 const styles = StyleSheet.create({
-  btnDelete: {
-    textAlign: 'center',
-    padding: 5,
-    backgroundColor: 'red',
-    color: 'white',
-    width: '40%'
-  },
   appStatus: {
     textAlign: 'center',
     fontSize: 16
