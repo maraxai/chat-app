@@ -21,8 +21,8 @@ export default class CustomActions extends React.Component {
         const imageUrl = await this.uploadImageFetch(result.uri);
         this.props.onSend({ image: imageUrl })
       }
-      console.log('result in pickImage in custom-actions: ')
-      console.log(result)
+      console.log('imageUrl in pickImage: ' + this.imageUrl)
+      console.log(imageUrl)
       console.log('result.uri in pickImage in custom-actions: ' + result.uri)
     }
   }
@@ -42,9 +42,9 @@ export default class CustomActions extends React.Component {
     }
   }
 
-
   getLocation = async () => {
     console.log('getLocation() has been invoked')
+    try {
     //alert('Your current location should be: AT HOME! \n If your current location does not match AT HOME, contact your system administrator, i.e. your mother, immediately.');
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     console.log('status is: ' + status)
@@ -56,18 +56,17 @@ export default class CustomActions extends React.Component {
       console.log('longitude: ' + longitude + ' / '+ 'altitude: ' + altitude)
 
       if (result) {
-        this.setState({
-          location: result
-        });
-      }
-      console.log(location)
-    }
-    this.props.onSend({ location: {
-      longitude: this.longitude,
-      latitude: this.latitude
-    }
-  })
+        this.props.onSend({ location: {
+          longitude: result.coords.longitude,
+          latitude: result.coords.latitude
+        }
+      })
   }
+  }
+} catch (error) {
+  console.log(error.message)
+}
+}
 
   uploadImageFetch = async (uri) => {
     try {

@@ -68,14 +68,11 @@ export default class Chat extends React.Component {
     //  these entries determine what will be displayed on the device
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || '',
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        image: data.image,
-        location: {
-          latitude: data.latitude,
-          longitude: data.longitude,
-        }
+        image: data.image || '',
+        location: data.location || null
       });
       this.setState({
         messages
@@ -88,17 +85,21 @@ export default class Chat extends React.Component {
   // these entries will be send to firestore, function 'fired' by onSend
   addMessage() {
     const message = this.state.messages[0];
-    this.referenceMessages.add({
-      _id: message._id,
-      text: message.text,
-      createdAt: message.createdAt,
-      user: message.user,
-      image: message.image || '',
-      location: {
-        latitude: message.latitude || null,
-        longitude: message.longitude || null
-      }
-    })
+    //console.log('this consoles this.state.messages[0] in the addMessage(): ')
+  //  console.log(this.state.messages);
+    try {
+        this.referenceMessages.add({
+          _id: message._id,
+          text: message.text || '',
+          createdAt: message.createdAt,
+          user: message.user,
+          image: message.image || '',
+          location: message.location || null
+        })
+    }
+    catch (error) {
+      console.log(error.message)
+    }
   }
 
   // will add new message to messages array
@@ -106,10 +107,10 @@ export default class Chat extends React.Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
-      this.addMessage();
       this.saveMessages();
+      this.addMessage();
     });
-    }
+  }
   //navigation bar configuration, add user name nav bar
   static navigationOptions = ({ navigation }) => {
     return {
