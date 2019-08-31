@@ -1,4 +1,32 @@
-/** manages the communication screen */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: chat.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: chat.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** manages the communication screen */
 /**
 * React
 /*
@@ -171,7 +199,7 @@ export default class Chat extends React.Component {
   /** message boxes, placed left and right */
   renderBubble(props) {
     return (
-      <Bubble
+      &lt;Bubble
         {...props}
         wrapperStyle={{
           right: {
@@ -190,7 +218,7 @@ export default class Chat extends React.Component {
     if (this.state.connection_Status == 'Offline') {
     } else {
       return (
-        <InputToolbar
+        &lt;InputToolbar
           {...props}
         />
       );
@@ -202,7 +230,7 @@ export default class Chat extends React.Component {
     const { currentMessage } = props;
     if (currentMessage.location) {
       return (
-        <MapView
+        &lt;MapView
           style={{
             width: 150,
             height: 100,
@@ -265,7 +293,7 @@ export default class Chat extends React.Component {
 
   /** renders the custom action button in the text input field */
   renderCustomActions = (props) => {
-    return <CustomActions {...props} />;
+    return &lt;CustomActions {...props} />;
   };
 
   /** defines what happens upon change of connectivity */
@@ -304,18 +332,18 @@ export default class Chat extends React.Component {
     const color = this.props.navigation.state.params.color;
     const connectionStatus = this.state.isConnected;
     return (
-      <View style={{
+      &lt;View style={{
         flex: 1,
         backgroundColor: color,
         marginBottom: 40
       }}
       >
-        <Text style={styles.connectionStatus}>{this.state.loggedInText}</Text>
-        <Text style={styles.appStatus}> You are { this.state.connection_Status } </Text>
-        {this.state.uri &&
-          <Image source={{ uri: this.state.uri }} style={styles.image} />
+        &lt;Text style={styles.connectionStatus}>{this.state.loggedInText}&lt;/Text>
+        &lt;Text style={styles.appStatus}> You are { this.state.connection_Status } &lt;/Text>
+        {this.state.uri &amp;&amp;
+          &lt;Image source={{ uri: this.state.uri }} style={styles.image} />
         }
-        <GiftedChat
+        &lt;GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderCustomView={this.renderCustomView}
@@ -324,8 +352,8 @@ export default class Chat extends React.Component {
           onSend={messages => this.onSend(messages)}
           user={this.user}
           />
-        { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
-      </View>
+        { Platform.OS === 'android' ? &lt;KeyboardSpacer /> : null }
+      &lt;/View>
     )
   }
 
@@ -388,3 +416,26 @@ const styles = StyleSheet.create({
     marginBottom: 12
   }
 })
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Start.html">Start</a></li><li><a href="state.html">state</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Aug 31 2019 18:45:31 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

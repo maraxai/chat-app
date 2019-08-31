@@ -1,4 +1,32 @@
-/** manages the starting screen of the application chat-app */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: start.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: start.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** manages the starting screen of the application chat-app */
 /**
 * React
 */
@@ -45,83 +73,83 @@ export default class Start extends React.Component {
   render() {
     const color = this.state.color;
     return (
-      <View style={styles.container}>
-      <ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
-        <View style={styles.innercontainer}>
-          <Text style={styles.title}>Chat App</Text>
-          <View style={styles.entries}>
-            <TextInput
+      &lt;View style={styles.container}>
+      &lt;ImageBackground source={require('../assets/startscreen_bg.png')} style={styles.backgroundImage}>
+        &lt;View style={styles.innercontainer}>
+          &lt;Text style={styles.title}>Chat App&lt;/Text>
+          &lt;View style={styles.entries}>
+            &lt;TextInput
               style={styles.input}
               onChangeText={(name) => this.setState({ name })}
               value={this.state.name}
               placeholder='Your Name'
             />
-            <View style={{flex: 1, justifyContent: 'space-around', alignItems: 'flex-start'}}>
-              <Text style={styles.pickcolor}>Choose Background Color:</Text>
-              <View style={styles.colors}>
+            &lt;View style={{flex: 1, justifyContent: 'space-around', alignItems: 'flex-start'}}>
+              &lt;Text style={styles.pickcolor}>Choose Background Color:&lt;/Text>
+              &lt;View style={styles.colors}>
 
-              <TouchableOpacity
+              &lt;TouchableOpacity
                 onPress={() => this.setState({color: '#090C08'})}
                 style={styles.black}
               >
                 { (this.state.color == '#090C08') ?
                   (
-                    <View style={{position: 'absolute', left: -5, top: -5}}>
-                      <View style={[styles.black2]} ><View style={[styles.black]} ></View></View>
-                      </View>
+                    &lt;View style={{position: 'absolute', left: -5, top: -5}}>
+                      &lt;View style={[styles.black2]} >&lt;View style={[styles.black]} >&lt;/View>&lt;/View>
+                      &lt;/View>
                   )
-                  : (<View style={styles.black} ></View>)
+                  : (&lt;View style={styles.black} >&lt;/View>)
                 }
-              </TouchableOpacity>
-              <TouchableOpacity
+              &lt;/TouchableOpacity>
+              &lt;TouchableOpacity
                 onPress={() => this.setState({color: '#474056'})}
                 style={styles.lila}
               >
                 { (this.state.color == '#474056') ?
                   (
-                    <View style={{position: 'absolute', left: -5, top: -5}}>
-                      <View style={[styles.lila2]} ><View style={[styles.lila]} ></View></View>
-                      </View>
+                    &lt;View style={{position: 'absolute', left: -5, top: -5}}>
+                      &lt;View style={[styles.lila2]} >&lt;View style={[styles.lila]} >&lt;/View>&lt;/View>
+                      &lt;/View>
                   )
-                  : (<View style={styles.lila} ></View>)
+                  : (&lt;View style={styles.lila} >&lt;/View>)
                 }
-              </TouchableOpacity>
-              <TouchableOpacity
+              &lt;/TouchableOpacity>
+              &lt;TouchableOpacity
                 onPress={() => this.setState({color: '#8A95A5'})}
                 style={styles.blue}
               >
                 { (this.state.color == '#8A95A5') ?
                   (
-                    <View style={{position: 'absolute', left: -5, top: -5}}>
-                      <View style={[styles.blue2]} ><View style={[styles.blue]} ></View></View>
-                      </View>
+                    &lt;View style={{position: 'absolute', left: -5, top: -5}}>
+                      &lt;View style={[styles.blue2]} >&lt;View style={[styles.blue]} >&lt;/View>&lt;/View>
+                      &lt;/View>
                   )
-                  : (<View style={styles.blue} ></View>)
+                  : (&lt;View style={styles.blue} >&lt;/View>)
                 }
-              </TouchableOpacity>
-              <TouchableOpacity
+              &lt;/TouchableOpacity>
+              &lt;TouchableOpacity
                 onPress={() => this.setState({color: '#B9C6AE'})}
                 style={styles.grey}
               >
                 { (this.state.color == '#B9C6AE') ?
                   (
-                    <View style={{position: 'absolute', left: -5, top: -5}}>
-                      <View style={[styles.grey2]} ><View style={[styles.grey]} ></View></View>
-                      </View>
+                    &lt;View style={{position: 'absolute', left: -5, top: -5}}>
+                      &lt;View style={[styles.grey2]} >&lt;View style={[styles.grey]} >&lt;/View>&lt;/View>
+                      &lt;/View>
                   )
-                  : (<View style={styles.grey} ></View>)
+                  : (&lt;View style={styles.grey} >&lt;/View>)
                 }
-              </TouchableOpacity>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.button}
+              &lt;/TouchableOpacity>
+              &lt;/View>
+            &lt;/View>
+            &lt;TouchableOpacity style={styles.button}
               onPress={() => this.props.navigation.navigate('chat', { name: this.state.name, color: this.state.color })}>
-              <Text style={styles.buttonlabel}>Start Chatting</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        </ImageBackground>
-      </View>
+              &lt;Text style={styles.buttonlabel}>Start Chatting&lt;/Text>
+            &lt;/TouchableOpacity>
+          &lt;/View>
+        &lt;/View>
+        &lt;/ImageBackground>
+      &lt;/View>
     )
   }
 }
@@ -285,3 +313,26 @@ const styles = StyleSheet.create({
     borderColor: '#B9C6AE'
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Start.html">Start</a></li><li><a href="state.html">state</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Aug 31 2019 18:45:31 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
