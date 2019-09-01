@@ -4,14 +4,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
 /**
-* @function
+* @class Start
 * @requires React
 * @requires React-Native
 */
 
-/**
-* react class component Start
-*/
 export default class Start extends React.Component {
 
   constructor(props) {

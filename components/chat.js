@@ -16,7 +16,7 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 
 /**
-* @function
+* @class Chat
 * @requires React
 * @requires React-Native
 * @requires Keyboard Spacer
@@ -29,9 +29,6 @@ import 'firebase/firestore';
 * @requires Firestore
 */
 
-/**
-* react class component Chat
-*/
 export default class Chat extends React.Component {
   constructor() {
     super();

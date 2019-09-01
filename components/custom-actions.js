@@ -1,7 +1,6 @@
 /**
 * @description custom-actions.js manages the custom action button in the text input field
 */
-/** component react from react library */
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
 import PropTypes from 'prop-types';
@@ -10,8 +9,9 @@ import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+
 /**
-* @function
+* @class CustomActions
 * @requires react - component react
 * @requires react-native - component react-native
 * @requires prop-types
@@ -22,9 +22,6 @@ import 'firebase/firestore';
 * @requires firebase/firestore - specify firestore
 */
 
-/**
-* react class component CustomActions
-*/
 export default class CustomActions extends React.Component {
 
   /** pick an image from the device's storage and send it to firestore*/
