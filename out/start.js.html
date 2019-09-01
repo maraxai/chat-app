@@ -26,23 +26,22 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/** manages the starting screen of the application chat-app */
-/**
-* React
+            <pre class="prettyprint source linenums"><code>/**
+* @description start.js manages the starting screen of the application chat-app
 */
 import React from 'react';
-/**
-* React-Native
-*/
 import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
+/**
+* @function
+* @requires React
+* @requires React-Native
+*/
 
 /**
-* @class Start
+* react class component Start
 */
 export default class Start extends React.Component {
-  /**
-  * @constructor state
-  */
+
   constructor(props) {
     super(props);
     this.state = {
@@ -58,19 +57,20 @@ export default class Start extends React.Component {
   changeColor = (value) => {
     /**
     * @function changeColor
-    * @param value hex value of color
+    * @param value hex-value color
     */
     this.setState({color: value});
   }
 
-  /**
-  * @function render
-  * @returns ImageBackground
-  * @returns app title
-  * @returns TextInput
-  * @returns TouchableOpacity with background color options
-  */
   render() {
+    /**
+    * @function render
+    * @memberof Start - react class component
+    * @returns ImageBackground
+    * @returns app title
+    * @returns TextInput
+    * @returns TouchableOpacity with background color options
+    */
     const color = this.state.color;
     return (
       &lt;View style={styles.container}>
@@ -323,13 +323,13 @@ const styles = StyleSheet.create({
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Start.html">Start</a></li><li><a href="state.html">state</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Aug 31 2019 18:45:31 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Sep 01 2019 18:49:47 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

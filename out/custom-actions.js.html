@@ -26,26 +26,33 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>//** manages the custom action button in the text input field */
+            <pre class="prettyprint source linenums"><code>/**
+* @description custom-actions.js manages the custom action button in the text input field
+*/
 /** component react from react library */
 import React from 'react';
-/**  */
 import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
-/**  */
 import PropTypes from 'prop-types';
-/** component ImagePicker from expo-library enables to select an image from the device */
 import * as ImagePicker from 'expo-image-picker';
-/** component Permissions from expo-library requests user permission for selectable tasks*/
 import * as Permissions from 'expo-permissions';
-/** component Location from expo-library  */
 import * as Location from 'expo-location';
-/** import all components from firebase and specify firestore */
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-//const firebase = require('firebase');
-//require('firebase/firestore');
+/**
+* @function
+* @requires react - component react
+* @requires react-native - component react-native
+* @requires prop-types
+* @requires expo-image-picker - component ImagePicker from expo-library enables to select an image from the device
+* @requires expo-permissions - component Permissions from expo-library requests user permission for selectable tasks
+* @requires expo-location - component Location from expo-library
+* @requires firebase - import all components from firebase
+* @requires firebase/firestore - specify firestore
+*/
 
-/** react component class that manages  */
+/**
+* react class component CustomActions
+*/
 export default class CustomActions extends React.Component {
 
   /** pick an image from the device's storage and send it to firestore*/
@@ -92,7 +99,6 @@ export default class CustomActions extends React.Component {
   /** get the coordinates (longitude and latitude) of your position */
   getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      //alert('Dear daughter, Your current location should be: AT HOME! \n If your current location does not match, contact your system administrator, i.e. your mother, immediately.');
     try {
       if (status === 'granted') {
         let result = await Location.getCurrentPositionAsync({})
@@ -227,13 +233,13 @@ CustomActions.contextTypes = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Start.html">Start</a></li><li><a href="state.html">state</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Aug 31 2019 18:45:31 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Sep 01 2019 18:49:47 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,23 +1,30 @@
-//** manages the custom action button in the text input field */
+/**
+* @description custom-actions.js manages the custom action button in the text input field
+*/
 /** component react from react library */
 import React from 'react';
-/**  */
 import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
-/**  */
 import PropTypes from 'prop-types';
-/** component ImagePicker from expo-library enables to select an image from the device */
 import * as ImagePicker from 'expo-image-picker';
-/** component Permissions from expo-library requests user permission for selectable tasks*/
 import * as Permissions from 'expo-permissions';
-/** component Location from expo-library  */
 import * as Location from 'expo-location';
-/** import all components from firebase and specify firestore */
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-//const firebase = require('firebase');
-//require('firebase/firestore');
+/**
+* @function
+* @requires react - component react
+* @requires react-native - component react-native
+* @requires prop-types
+* @requires expo-image-picker - component ImagePicker from expo-library enables to select an image from the device
+* @requires expo-permissions - component Permissions from expo-library requests user permission for selectable tasks
+* @requires expo-location - component Location from expo-library
+* @requires firebase - import all components from firebase
+* @requires firebase/firestore - specify firestore
+*/
 
-/** react component class that manages  */
+/**
+* react class component CustomActions
+*/
 export default class CustomActions extends React.Component {
 
   /** pick an image from the device's storage and send it to firestore*/
@@ -64,7 +71,6 @@ export default class CustomActions extends React.Component {
   /** get the coordinates (longitude and latitude) of your position */
   getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      //alert('Dear daughter, Your current location should be: AT HOME! \n If your current location does not match, contact your system administrator, i.e. your mother, immediately.');
     try {
       if (status === 'granted') {
         let result = await Location.getCurrentPositionAsync({})

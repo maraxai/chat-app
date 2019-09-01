@@ -1,20 +1,19 @@
-/** manages the starting screen of the application chat-app */
 /**
-* React
+* @description start.js manages the starting screen of the application chat-app
 */
 import React from 'react';
-/**
-* React-Native
-*/
 import { StyleSheet, Text, View, Button, TextInput, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
+/**
+* @function
+* @requires React
+* @requires React-Native
+*/
 
 /**
-* @class Start
+* react class component Start
 */
 export default class Start extends React.Component {
-  /**
-  * @constructor state
-  */
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,19 +29,20 @@ export default class Start extends React.Component {
   changeColor = (value) => {
     /**
     * @function changeColor
-    * @param value hex value of color
+    * @param value hex-value color
     */
     this.setState({color: value});
   }
 
-  /**
-  * @function render
-  * @returns ImageBackground
-  * @returns app title
-  * @returns TextInput
-  * @returns TouchableOpacity with background color options
-  */
   render() {
+    /**
+    * @function render
+    * @memberof Start - react class component
+    * @returns ImageBackground
+    * @returns app title
+    * @returns TextInput
+    * @returns TouchableOpacity with background color options
+    */
     const color = this.state.color;
     return (
       <View style={styles.container}>

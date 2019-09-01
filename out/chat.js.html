@@ -26,55 +26,39 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/** manages the communication screen */
-/**
-* React
-/*
+            <pre class="prettyprint source linenums"><code>/**
+* @description chat.js manages the communication screen
+*/
+
 import React from 'react';
-/**
-* React Native
-*/
 import { StyleSheet, Text, View, Button, Navigator, Platform,
-        TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
-/**
-* Gifted Chat
-*/
+         TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-/**
-* Keyboard Spacer
-*/
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-/**
-* Custom Actions
-*/
 import CustomActions from './custom-actions';
-/**
-* React Native Maps
-*/
 import MapView from 'react-native-maps';
-/**
-* Expo Image Picker
-*/
 import * as ImagePicker from 'expo-image-picker';
-/**
-* Expo Permissions
-*/
 import * as Permissions from 'expo-permissions';
-/**
-* Expo Location
-*/
 import * as Location from 'expo-location';
-/**
-* Firebase
-*/
 import * as firebase from 'firebase';
-/**
-* Firestore
-*/
 import 'firebase/firestore';
 
 /**
-* @class Chat
+* @function
+* @requires React
+* @requires React-Native
+* @requires Keyboard Spacer
+* @requires Custom Actions
+* @requires React Native Maps
+* @requires Expo Image Picker
+* @requires Expo Permissions
+* @requires Expo Location
+* @requires Firebase
+* @requires Firestore
+*/
+
+/**
+* react class component Chat
 */
 export default class Chat extends React.Component {
   constructor() {
@@ -127,13 +111,34 @@ export default class Chat extends React.Component {
   * once collection gets updated a snapshot is taken
   */
   onCollectionUpdate = (querySnapshot) => {
+    /**
+    * @function onCollectionUpdate
+    * @example UI data
+    * @param {string} _id message object id
+    * @param {string} text text message
+    * @param {number} created.At date and time
+    * @param {object} user id, avatar and name
+    * @param {string} user._id user id
+    * @param {string} user.avatar image href
+    * @param {string} user.name user name
+    * @param {string} image downloadUrl
+    * @param {object} location longitude and latitude
+    * @param {number} location.longitude longitude coordinate of current location
+    * @param {number} location.latitude latitude coordinate of current location
+    */
+
     const messages = [];
+    /**
+    * array of messages
+    */
     try {
       /** go through each document */
       querySnapshot.forEach((doc) => {
         /* get the QueryDocumentSnapshot's data */
         let data = doc.data();
-        /** these entries determine what will be displayed on the device */
+        /**
+        * messages.push object contains data that is displayed on the device
+        */
         messages.push({
           _id: data._id,
           text: data.text || '',
@@ -152,8 +157,25 @@ export default class Chat extends React.Component {
     }
   };
 
-  /** these entries will be send to firestore, function 'fired' by onSend */
+  /**
+  * these entries will be send to firestore, function 'fired' by onSend()
+  */
   addMessage() {
+    /**
+    * @function addMessage
+    * @example message data send to firebase
+    * @param {string} _id message object id
+    * @param {string} text text message
+    * @param {number} created.At date and time
+    * @param {object} user id, avatar and name
+    * @param {string} user._id user id
+    * @param {string} user.avatar image href
+    * @param {string} user.name user name
+    * @param {string} image downloadUrl
+    * @param {object} location longitude and latitude
+    * @param {number} location.longitude longitude coordinate of current location
+    * @param {number} location.latitude latitude coordinate of current location
+    */
     const message = this.state.messages[0];
     try {
         this.referenceMessages.add({
@@ -426,13 +448,13 @@ const styles = StyleSheet.create({
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Start.html">Start</a></li><li><a href="state.html">state</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#backgroundImage">backgroundImage</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#buttonlabel">buttonlabel</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#container">container</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#innercontainer">innercontainer</a></li><li><a href="global.html#input">input</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickcolor">pickcolor</a></li><li><a href="global.html#ref">ref</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#user">user</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Aug 31 2019 18:45:31 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Sep 01 2019 18:49:47 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,52 +1,36 @@
-/** manages the communication screen */
 /**
-* React
-/*
+* @description chat.js manages the communication screen
+*/
+
 import React from 'react';
-/**
-* React Native
-*/
 import { StyleSheet, Text, View, Button, Navigator, Platform,
-        TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
-/**
-* Gifted Chat
-*/
+         TouchableOpacity, AsyncStorage, NetInfo, Image, Alert } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-/**
-* Keyboard Spacer
-*/
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-/**
-* Custom Actions
-*/
 import CustomActions from './custom-actions';
-/**
-* React Native Maps
-*/
 import MapView from 'react-native-maps';
-/**
-* Expo Image Picker
-*/
 import * as ImagePicker from 'expo-image-picker';
-/**
-* Expo Permissions
-*/
 import * as Permissions from 'expo-permissions';
-/**
-* Expo Location
-*/
 import * as Location from 'expo-location';
-/**
-* Firebase
-*/
 import * as firebase from 'firebase';
-/**
-* Firestore
-*/
 import 'firebase/firestore';
 
 /**
-* @class Chat
+* @function
+* @requires React
+* @requires React-Native
+* @requires Keyboard Spacer
+* @requires Custom Actions
+* @requires React Native Maps
+* @requires Expo Image Picker
+* @requires Expo Permissions
+* @requires Expo Location
+* @requires Firebase
+* @requires Firestore
+*/
+
+/**
+* react class component Chat
 */
 export default class Chat extends React.Component {
   constructor() {
@@ -99,13 +83,34 @@ export default class Chat extends React.Component {
   * once collection gets updated a snapshot is taken
   */
   onCollectionUpdate = (querySnapshot) => {
+    /**
+    * @function onCollectionUpdate
+    * @example UI data
+    * @param {string} _id message object id
+    * @param {string} text text message
+    * @param {number} created.At date and time
+    * @param {object} user id, avatar and name
+    * @param {string} user._id user id
+    * @param {string} user.avatar image href
+    * @param {string} user.name user name
+    * @param {string} image downloadUrl
+    * @param {object} location longitude and latitude
+    * @param {number} location.longitude longitude coordinate of current location
+    * @param {number} location.latitude latitude coordinate of current location
+    */
+
     const messages = [];
+    /**
+    * array of messages
+    */
     try {
       /** go through each document */
       querySnapshot.forEach((doc) => {
         /* get the QueryDocumentSnapshot's data */
         let data = doc.data();
-        /** these entries determine what will be displayed on the device */
+        /**
+        * messages.push object contains data that is displayed on the device
+        */
         messages.push({
           _id: data._id,
           text: data.text || '',
@@ -124,8 +129,25 @@ export default class Chat extends React.Component {
     }
   };
 
-  /** these entries will be send to firestore, function 'fired' by onSend */
+  /**
+  * these entries will be send to firestore, function 'fired' by onSend()
+  */
   addMessage() {
+    /**
+    * @function addMessage
+    * @example message data send to firebase
+    * @param {string} _id message object id
+    * @param {string} text text message
+    * @param {number} created.At date and time
+    * @param {object} user id, avatar and name
+    * @param {string} user._id user id
+    * @param {string} user.avatar image href
+    * @param {string} user.name user name
+    * @param {string} image downloadUrl
+    * @param {object} location longitude and latitude
+    * @param {number} location.longitude longitude coordinate of current location
+    * @param {number} location.latitude latitude coordinate of current location
+    */
     const message = this.state.messages[0];
     try {
         this.referenceMessages.add({
